@@ -16,14 +16,31 @@ export default function MockupGenerator() {
   const [username, setUsername] = useState('pulpmedia')
   const [profileImage, setProfileImage] = useState<string | null>(null)
   const [bgColor, setBgColor] = useState('#f3f4f6')
+  const [caption, setCaption] = useState('')
 
   const aspectRatio = useMemo(() => {
     if (format.network === 'instagram' && format.format === 'post') return 1
     return 9 / 16
   }, [format])
 
+  const defaultCaption = useMemo(() => {
+    if (format.network === 'tiktok') return 'Das ist ein Beispiel-Video 🎬✨ #viral #fyp #foryou'
+    if (format.format === 'reel') return 'Das ist ein Beispiel-Reel ✨🎬'
+    if (format.format === 'story') return ''
+    return 'Das ist ein Beispiel-Beitrag ✨'
+  }, [format])
+
+  const handleReset = () => {
+    setCroppedImage(null)
+    setUsername('pulpmedia')
+    setProfileImage(null)
+    setBgColor('#f3f4f6')
+    setCaption('')
+    setFormat({ network: 'instagram', format: 'post' })
+  }
+
   const renderMockup = () => {
-    const props = { image: croppedImage, username, profileImage }
+    const props = { image: croppedImage, username, profileImage, caption: caption || defaultCaption }
 
     if (format.network === 'tiktok') {
       return <TikTokFeed {...props} />
@@ -76,9 +93,39 @@ export default function MockupGenerator() {
 
         <div className="h-px bg-gray-100" />
 
+        {/* Caption Editor – nicht bei Story */}
+        {!(format.network === 'instagram' && format.format === 'story') && (
+          <>
+            <div className="space-y-3">
+              <label className="block text-sm font-medium text-gray-700">Text / Caption</label>
+              <textarea
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+                placeholder={defaultCaption}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              />
+            </div>
+
+            <div className="h-px bg-gray-100" />
+          </>
+        )}
+
         <ColorPicker color={bgColor} onChange={setBgColor} />
 
         <div className="h-px bg-gray-100" />
+
+        {/* Reset Button */}
+        <button
+          onClick={handleReset}
+          className="w-full py-2.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors flex items-center justify-center gap-2"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="1 4 1 10 7 10" />
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+          </svg>
+          Zurücksetzen
+        </button>
 
         <div className="text-xs text-gray-400 pt-2">
           Tipp: Mache einen Screenshot des Mockups mit deinem Betriebssystem-Tool

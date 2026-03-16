@@ -6,9 +6,10 @@ interface Props {
   image: string | null
   username: string
   profileImage: string | null
+  caption: string
 }
 
-export default function InstagramStory({ image, username, profileImage }: Props) {
+export default function InstagramStory({ image, username, profileImage, caption }: Props) {
   return (
     <div className="w-[375px] h-[812px] bg-black rounded-xl overflow-hidden shadow-xl relative">
       {/* Background Image */}
