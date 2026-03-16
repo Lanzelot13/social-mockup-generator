@@ -1,0 +1,98 @@
+'use client'
+
+import React, { useState, useMemo } from 'react'
+import ImageUploader from './ImageUploader'
+import NetworkSelector, { MockupFormat } from './NetworkSelector'
+import ProfileEditor from './ProfileEditor'
+import ColorPicker from './ColorPicker'
+import InstagramPost from './mockups/InstagramPost'
+import InstagramStory from './mockups/InstagramStory'
+import InstagramReel from './mockups/InstagramReel'
+import TikTokFeed from './mockups/TikTokFeed'
+
+export default function MockupGenerator() {
+  const [croppedImage, setCroppedImage] = useState<string | null>(null)
+  const [format, setFormat] = useState<MockupFormat>({ network: 'instagram', format: 'post' })
+  const [username, setUsername] = useState('pulpmedia')
+  const [profileImage, setProfileImage] = useState<string | null>(null)
+  const [bgColor, setBgColor] = useState('#f3f4f6')
+
+  const aspectRatio = useMemo(() => {
+    if (format.network === 'instagram' && format.format === 'post') return 1
+    return 9 / 16
+  }, [format])
+
+  const renderMockup = () => {
+    const props = { image: croppedImage, username, profileImage }
+
+    if (format.network === 'tiktok') {
+      return <TikTokFeed {...props} />
+    }
+
+    switch (format.format) {
+      case 'story':
+        return <InstagramStory {...props} />
+      case 'reel':
+        return <InstagramReel {...props} />
+      case 'post':
+      default:
+        return <InstagramPost {...props} />
+    }
+  }
+
+  return (
+    <div className="min-h-screen flex">
+      {/* Sidebar */}
+      <div className="w-80 bg-white border-r border-gray-200 p-6 space-y-6 overflow-y-auto flex-shrink-0">
+        <div>
+          <h1 className="text-xl font-bold text-gray-900">Mockup Generator</h1>
+          <p className="text-sm text-gray-500 mt-1">Social Media Mockups erstellen</p>
+        </div>
+
+        <div className="h-px bg-gray-100" />
+
+        <NetworkSelector selected={format} onChange={(f) => {
+          setFormat(f)
+          // Reset cropped image when format changes (aspect ratio might differ)
+          setCroppedImage(null)
+        }} />
+
+        <div className="h-px bg-gray-100" />
+
+        <ImageUploader
+          onImageCropped={setCroppedImage}
+          aspectRatio={aspectRatio}
+          currentImage={croppedImage}
+        />
+
+        <div className="h-px bg-gray-100" />
+
+        <ProfileEditor
+          username={username}
+          onUsernameChange={setUsername}
+          profileImage={profileImage}
+          onProfileImageChange={setProfileImage}
+        />
+
+        <div className="h-px bg-gray-100" />
+
+        <ColorPicker color={bgColor} onChange={setBgColor} />
+
+        <div className="h-px bg-gray-100" />
+
+        <div className="text-xs text-gray-400 pt-2">
+          Tipp: Mache einen Screenshot des Mockups mit deinem Betriebssystem-Tool
+          (Cmd+Shift+4 auf Mac, Win+Shift+S auf Windows).
+        </div>
+      </div>
+
+      {/* Preview Area */}
+      <div
+        className="flex-1 flex items-center justify-center p-8 transition-colors duration-300 mockup-container overflow-auto"
+        style={{ backgroundColor: bgColor }}
+      >
+        {renderMockup()}
+      </div>
+    </div>
+  )
+}
