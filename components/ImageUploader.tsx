@@ -97,7 +97,7 @@ export default function ImageUploader({ onImageCropped, aspectRatio, currentImag
             <div className="p-4 border-b">
               <h3 className="font-semibold text-gray-900">Bildausschnitt wählen</h3>
               <p className="text-sm text-gray-500 mt-1">
-                Seitenverhältnis: {aspectRatio === 1 ? '1:1' : '9:16'}
+                Seitenverhältnis: {aspectRatio === 4/5 ? '4:5' : '9:16'}
               </p>
             </div>
             <div className="relative h-80 bg-gray-900">

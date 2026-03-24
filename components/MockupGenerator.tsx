@@ -19,7 +19,7 @@ export default function MockupGenerator() {
   const [caption, setCaption] = useState('')
 
   const aspectRatio = useMemo(() => {
-    if (format.network === 'instagram' && format.format === 'post') return 1
+    if (format.network === 'instagram' && format.format === 'post') return 4 / 5
     return 9 / 16
   }, [format])
 

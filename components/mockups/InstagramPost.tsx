@@ -51,7 +51,7 @@ export default function InstagramPost({ image, username, profileImage, caption }
       </div>
 
       {/* Image */}
-      <div className="w-full aspect-square bg-gray-200">
+      <div className="w-full aspect-[4/5] bg-gray-200">
         {image ? (
           <img src={image} alt="" className="w-full h-full object-cover" />
         ) : (
